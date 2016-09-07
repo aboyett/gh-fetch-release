@@ -43,14 +43,25 @@ def list_gh_release_assets(release):
     return requests.get(query_url_fmt.format(**release_dict)).json()['assets']
 
 
+def select_gh_release_asset(assets, fname):
+    """
+    Returns the singular asset matching fname from the list of assets
+    """
+    matched_assets = [asset for asset in assets if fname == asset['name']]
+    assert len(matched_assets) == 1
+
+    return matched_assets[0]
+
 def main():
     """
-    program main. reads in the url and returns the list of assets for the given
+    program main. reads in the url and returns the desired asset for the given
     release.
     """
     url = sys.argv[1]
 
-    print list_gh_release_assets(parse_url(url))
+    release = parse_url(url)
+
+    print select_gh_release_asset(list_gh_release_assets(release), release.filename)
 
 if __name__ == '__main__':
     main()
