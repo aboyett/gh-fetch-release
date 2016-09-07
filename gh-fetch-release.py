@@ -39,8 +39,10 @@ def list_gh_release_assets(release):
     query_url_fmt = urlparse.urljoin(GITHUB_API, '/repos/{owner}/{repo}/releases/tags/{version}')
 
     release_dict = release._asdict()
-    print query_url_fmt.format(**release_dict)
-    return requests.get(query_url_fmt.format(**release_dict)).json()['assets']
+    resp = requests.get(query_url_fmt.format(**release_dict))
+    assert resp.status_code == 200
+
+    return resp.json()['assets']
 
 
 def select_gh_release_asset(assets, fname):
