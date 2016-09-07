@@ -54,6 +54,15 @@ def select_gh_release_asset(assets, fname):
 
     return matched_assets[0]
 
+def emit_download_url(asset):
+    """
+    Returns the temporary S3 download URL for the specified asset
+    """
+    headers = {"ACCEPT": "application/octet-stream"}
+    resp = requests.get(asset['url'], headers=headers)
+
+    return resp
+
 def main():
     """
     program main. reads in the url and returns the desired asset for the given
