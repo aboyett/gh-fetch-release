@@ -30,13 +30,27 @@ def parse_url(url):
 
     return ReleaseTuple(path[1], path[2], path[5], path[6])
 
+
+def list_gh_release_assets(release):
+    """
+    Takes a ReleaseTuple object and returns the list of assets returned by the
+    Github API from "GET /repos/:owner/:repo/releases/tags/:tag"
+    """
+    query_url_fmt = urlparse.urljoin(GITHUB_API, '/repos/{owner}/{repo}/releases/tags/{version}')
+
+    release_dict = release._asdict()
+    print query_url_fmt.format(**release_dict)
+    return requests.get(query_url_fmt.format(**release_dict)).json()['assets']
+
+
 def main():
     """
-    program main. reads in the url and parses it
+    program main. reads in the url and returns the list of assets for the given
+    release.
     """
     url = sys.argv[1]
 
-    print parse_url(url)
+    print list_gh_release_assets(parse_url(url))
 
 if __name__ == '__main__':
     main()
